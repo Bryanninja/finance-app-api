@@ -1,16 +1,7 @@
-import { UUID } from 'node:crypto';
 import { PostgresHelper } from '../../db/postgres/helper';
 
-interface PostgresCreateUserRepositoryProps {
-  ID: UUID;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-}
-
 export class PostgresCreateUserRepository {
-  async execute(creteUserParams: PostgresCreateUserRepositoryProps) {
+  async execute(creteUserParams) {
     // create user in postgres
     const result = await PostgresHelper.query(
       'INSERT INTO users (ID, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)',
