@@ -1,19 +1,25 @@
-import { PostgresHelper } from '../../db/postgres/helper';
+import { PostgresHelper } from '../../db/postgres/helper.js';
 
 export class PostgresCreateUserRepository {
-  async execute(creteUserParams) {
+  async execute(createUserParams) {
     // create user in postgres
-    const result = await PostgresHelper.query(
-      'INSERT INTO users (ID, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)',
+    await PostgresHelper.query(
+      'INSERT INTO users (id, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)',
       [
-        creteUserParams.ID,
-        creteUserParams.first_name,
-        creteUserParams.last_name,
-        creteUserParams.email,
-        creteUserParams.password,
+        createUserParams.id,
+        createUserParams.first_name,
+        createUserParams.last_name,
+        createUserParams.email,
+        createUserParams.password,
       ],
     );
 
-    return result[0];
+    //Funciona perfeitamente! Mas no PostgreSQL, você pode economizar 1 ida ao banco fazendo tudo em 1 comando só com o RETURNING *:
+    const createdUser = await PostgresHelper.query(
+      'SELECT * FROM users WHERE id = $1',
+      [createUserParams.id],
+    );
+
+    return createdUser[0];
   }
 }
