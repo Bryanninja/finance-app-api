@@ -1,15 +1,23 @@
 import 'dotenv/config.js';
 import express from 'express';
 import { CreateUserController } from './src/controllers/create-user.js';
+import { GetUserByIdController } from './src/controllers/get-user-by-id.js';
 const app = express();
 
 app.use(express.json());
 
 app.post('/api/users', async (req, res) => {
   const createUserController = new CreateUserController();
-  const createUserResponse = await createUserController.execute(req);
+  const { statusCode, body } = await createUserController.execute(req);
 
-  res.status(createUserResponse.statusCode).json(createUserResponse.body);
+  res.status(statusCode).json(body);
+});
+
+app.get('/api/users/:userId', async (req, res) => {
+  const getUserByIdController = new GetUserByIdController();
+  const { statusCode, body } = await getUserByIdController.execute(req);
+
+  res.status(statusCode).json(body);
 });
 
 app.listen(process.env.PORT, () =>

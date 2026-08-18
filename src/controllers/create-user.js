@@ -1,4 +1,4 @@
-import { CreateUserUseCase } from '../use-case/create-user.js';
+import { CreateUserUseCase } from '../use-cases/create-user.js';
 import validator from 'validator';
 import { badRequest, serverError, created } from './helpers.js';
 
