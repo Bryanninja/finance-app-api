@@ -1,7 +1,14 @@
 import { EmailAlredyInUseError } from '../errors/users.js';
 import { UpdateUserUseCase } from '../use-cases/update-user.js';
-import { badRequest, ok, serverError } from './helpers.js';
+import { badRequest, ok, serverError } from './helpers/http.js';
 import validator from 'validator';
+import {
+  checkIfEmailIsValid,
+  checkIfPasswordIsValid,
+  emailIsAlreadyInUseResponse,
+  invalidIdResponse,
+  invalidPasswordResponse,
+} from './helpers/user.js';
 
 export class UpdateUserController {
   async execute(httpRequest) {
@@ -9,13 +16,12 @@ export class UpdateUserController {
       const userId = httpRequest.params.userId;
       const isIdValid = validator.isUUID(userId);
 
-      if (!isIdValid)
-        return badRequest({ message: 'The provided Id is not valid' });
+      if (!isIdValid) return invalidIdResponse();
 
-      const updateUserParams = httpRequest.body;
+      const params = httpRequest.body;
 
       const allowedFields = ['first_name', 'last_name', 'email', 'password'];
-      const someFieldIsNotAllowed = Object.keys(updateUserParams).some(
+      const someFieldIsNotAllowed = Object.keys(params).some(
         (field) => !allowedFields.includes(field),
       );
 
@@ -24,30 +30,23 @@ export class UpdateUserController {
       }
 
       //tamanho de senha
-      if (updateUserParams.password) {
-        const passwordIsValid = updateUserParams.password.length > 6;
+      if (params.password) {
+        const passwordIsValid = checkIfPasswordIsValid(params.password);
         if (!passwordIsValid) {
-          return badRequest({
-            message: 'Password must be at least 6 characters',
-          });
+          return invalidPasswordResponse();
         }
       }
 
-      if (updateUserParams.email) {
-        const emailIsValid = validator.isEmail(updateUserParams.email);
+      if (params.email) {
+        const emailIsValid = checkIfEmailIsValid(params.email);
 
         if (!emailIsValid) {
-          return badRequest({
-            message: 'Invalid E-mail. Please provide a valid one.',
-          });
+          return emailIsAlreadyInUseResponse();
         }
       }
 
       const updateUserUseCase = new UpdateUserUseCase();
-      const updatedUser = await updateUserUseCase.execute(
-        userId,
-        updateUserParams,
-      );
+      const updatedUser = await updateUserUseCase.execute(userId, params);
       return ok(updatedUser);
     } catch (error) {
       if (error instanceof EmailAlredyInUseError) {
