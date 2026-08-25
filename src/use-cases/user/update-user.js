@@ -1,4 +1,4 @@
-import { EmailAlredyInUseError } from '../errors/users.js';
+import { EmailAlredyInUseError } from '../../errors/users.js';
 
 import bcrypt from 'bcrypt';
 
