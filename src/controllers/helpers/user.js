@@ -1,4 +1,4 @@
-import { badRequest, notFound } from './http.js';
+import { badRequest, notFound } from './index.js';
 import validator from 'validator';
 
 export const invalidPasswordResponse = () => {
