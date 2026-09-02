@@ -1,4 +1,4 @@
-import { userNotFoundResponse } from '../../controllers/helpers/index.js';
+import { UserNotFoundError } from '../../errors/users';
 
 export class GetTransactionsByUserIdUseCase {
   constructor(getTransactionsByIdRepository, getUserByIdRepository) {
@@ -11,7 +11,7 @@ export class GetTransactionsByUserIdUseCase {
     const validUser = await this.getUserByIdRepository.execute(userId);
 
     if (!validUser) {
-      return userNotFoundResponse();
+      throw new UserNotFoundError(userId);
     }
 
     //chamar repository
