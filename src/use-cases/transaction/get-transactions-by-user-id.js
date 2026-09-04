@@ -1,8 +1,8 @@
-import { UserNotFoundError } from '../../errors/users';
+import { UserNotFoundError } from '../../errors/users.js';
 
 export class GetTransactionsByUserIdUseCase {
-  constructor(getTransactionsByIdRepository, getUserByIdRepository) {
-    this.getTransactionsByIdRepository = getTransactionsByIdRepository;
+  constructor(getTransactionsByUserIdRepository, getUserByIdRepository) {
+    this.getTransactionsByUserIdRepository = getTransactionsByUserIdRepository;
     this.getUserByIdRepository = getUserByIdRepository;
   }
   async execute(params) {
@@ -16,7 +16,7 @@ export class GetTransactionsByUserIdUseCase {
 
     //chamar repository
     const transactions =
-      await this.getTransactionsByIdRepository.execute(userId);
+      await this.getTransactionsByUserIdRepository.execute(userId);
 
     return transactions;
   }
