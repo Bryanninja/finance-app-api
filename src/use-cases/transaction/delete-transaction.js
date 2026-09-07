@@ -1,4 +1,4 @@
-import { TransactionNotFoundError } from '../../errors/transactions';
+import { TransactionNotFoundError } from '../../errors/transactions.js';
 
 export class DeleteTransactionUseCase {
   constructor(deleteTransactionRepository, getTransactionByIdRepository) {
