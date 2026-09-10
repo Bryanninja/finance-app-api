@@ -12,10 +12,19 @@ const execMigrations = async () => {
   const client = await pool.connect();
 
   try {
-    const filePath = path.join(__dirname, '01-init.sql');
-    const script = fs.readFileSync(filePath, 'utf-8');
-    await client.query(script);
-    console.log('Migrations executed succesfully.');
+    const files = fs
+      .readdirSync(__dirname)
+      .filter((file) => file.endsWith('.sql'));
+
+    for (const file of files) {
+      const filePath = path.join(__dirname, file);
+      const script = fs.readFileSync(filePath, 'utf-8');
+      await client.query(script);
+
+      console.log(`Migration for file ${file} has been executed succesfully.`);
+    }
+
+    console.log('All Migrations were executed succesfully.');
   } catch (error) {
     console.log(error);
   } finally {
