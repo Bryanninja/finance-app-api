@@ -15,10 +15,10 @@ datasource db {
 
 model User{
   id String @id @default(uuid())
-  first_name String @db.Varchar(50)
-  last_name String @db.Varchar(50)
-  email String @db.Varchar(100) @unique
-  password String @db.Varchar(100)
+  first_name String @db.VarChar(50)
+  last_name String @db.VarChar(50)
+  email String @db.VarChar(100) @unique
+  password String @db.VarChar(100)
 }
 
 
