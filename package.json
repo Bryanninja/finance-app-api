@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky",
+    "postinstall": "prisma generate",
     "start:dev": "node --watch index.js"
   },
   "keywords": [],
