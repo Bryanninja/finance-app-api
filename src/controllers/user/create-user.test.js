@@ -115,4 +115,48 @@ describe('create User Controller', () => {
     //assert
     expect(result.statusCode).toBe(400);
   });
+
+  it('should return 400 if password is not provided', async () => {
+    //arrange
+    const createUserUseCaseStub = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCaseStub,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: 'Bryan',
+        last_name: 'Nascimento',
+        email: 'de@gmail.com',
+      },
+    };
+
+    //act
+    const result = await createUserController.execute(httpRequest);
+
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
+
+  it('should return 400 if password is less than 6 characters ', async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(createUserUseCase);
+
+    const httpRequest = {
+      body: {
+        first_name: 'Bryan',
+        last_name: 'Nascimento',
+        email: 'de@gmail.com',
+        password: '123',
+      },
+    };
+
+    //act
+
+    const result = await createUserController.execute(httpRequest);
+
+    //assert
+    expect(result.statusCode).toBe(400);
+  });
 });
