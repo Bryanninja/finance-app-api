@@ -15,8 +15,11 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
     "@eslint/js": "^10.0.1",
     "@prisma/client": "^6.19.3",
+    "babel-jest": "^30.5.2",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^10.1.8",
     "git-commit-msg-linter": "^5.0.9",
