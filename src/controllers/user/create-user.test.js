@@ -1,4 +1,6 @@
+import { jest } from '@jest/globals';
 import { CreateUserController } from './create-user';
+import { faker } from '@faker-js/faker';
 
 describe('create User Controller', () => {
   class CreateUserUseCaseStub {
@@ -14,10 +16,12 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        email: 'de@gmail.com',
-        password: '1234567',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
@@ -37,9 +41,11 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        last_name: 'Nascimento',
-        email: 'de@gmail.com',
-        password: '1234567',
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
@@ -57,9 +63,11 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        email: 'de@gmail.com',
-        password: '1234567',
+        first_name: faker.person.firstName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
@@ -77,9 +85,11 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        password: '1234567',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
@@ -97,10 +107,12 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        email: 'de',
-        password: '1234567',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: 'invalid_email',
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
@@ -118,9 +130,9 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        email: 'de@gmail.com',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
       },
     };
 
@@ -138,10 +150,10 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        email: 'de@gmail.com',
-        password: '123',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 5 }),
       },
     };
 
@@ -159,10 +171,12 @@ describe('create User Controller', () => {
 
     const httpRequest = {
       body: {
-        first_name: 'Bryan',
-        last_name: 'Nascimento',
-        email: 'de@gmail.com',
-        password: '1234567',
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({
+          length: 7,
+        }),
       },
     };
 
