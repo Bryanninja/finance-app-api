@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { DeleteUserController } from './delete-user';
 
@@ -41,5 +42,17 @@ describe('DeleteUserController', () => {
 
     //assert
     expect(result.statusCode).toBe(200);
+  });
+
+  it('should return 500 if DeleteUserUseCase throw', async () => {
+    const { sut, deleteUserUseCase } = makeSut();
+
+    jest.spyOn(deleteUserUseCase, 'execute').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(500);
   });
 });
