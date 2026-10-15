@@ -139,4 +139,17 @@ describe('CreateTransactionController', () => {
 
     expect(result.statusCode).toBe(400);
   });
+
+  it('should return 400 when amount is invalid', async () => {
+    const { sut } = makeSut();
+
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        amount: 'invalid_amount',
+      },
+    });
+
+    expect(result.statusCode).toBe(400);
+  });
 });
