@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { UpdateUserController } from './update-user';
+import { EmailAlredyInUseError } from '../../errors/users';
 
 describe('UpdateUserController', () => {
   class UpdateUserUseCaseStub {
@@ -35,12 +36,15 @@ describe('UpdateUserController', () => {
 
   it('should return 200 if user has been updated', async () => {
     const { sut } = makeSut();
+
     const result = await sut.execute(httpRequest);
+
     expect(result.statusCode).toBe(200);
   });
 
   it('should return 400 if id provided is invalid', async () => {
     const { sut } = makeSut();
+
     const result = await sut.execute({
       params: {
         userId: 'invalid_id',
@@ -54,7 +58,20 @@ describe('UpdateUserController', () => {
   it('should return 500 if UpdateUserUseCase throws an error', async () => {
     const { sut, updateUserUseCase } = makeSut();
     jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(new Error());
+
     const result = await sut.execute(httpRequest);
+
     expect(result.statusCode).toBe(500);
+  });
+
+  it('should return 400 if UpdateUserUseCase throws EmailAlredyInUseError', async () => {
+    const { sut, updateUserUseCase } = makeSut();
+    jest
+      .spyOn(updateUserUseCase, 'execute')
+      .mockRejectedValueOnce(new EmailAlredyInUseError(httpRequest.body.email));
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(400);
   });
 });
