@@ -49,7 +49,7 @@ describe('UpdateUserController', () => {
       params: {
         userId: 'invalid_id',
       },
-      httpRequest,
+      httpRequest: httpRequest.body,
     });
 
     expect(result.statusCode).toBe(400);
