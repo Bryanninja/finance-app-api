@@ -35,4 +35,26 @@ describe('CreateTransactionController', () => {
 
     expect(result.statusCode).toBe(201);
   });
+
+  it('should return 400 when a user_id is invalid', async () => {
+    const { sut } = makeSut();
+
+    const result = await sut.execute({
+      ...httpRequest.body,
+      user_id: 'invalid_id',
+    });
+
+    expect(result.statusCode).toBe(400);
+  });
+
+  it('should return 400 when a user_id provided is invalid', async () => {
+    const { sut } = makeSut();
+
+    const result = await sut.execute({
+      ...httpRequest.body,
+      user_id: 'invalid_id',
+    });
+
+    expect(result.statusCode).toBe(400);
+  });
 });
