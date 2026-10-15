@@ -40,8 +40,10 @@ describe('CreateTransactionController', () => {
     const { sut } = makeSut();
 
     const result = await sut.execute({
-      ...httpRequest.body,
-      user_id: 'invalid_id',
+      body: {
+        ...httpRequest.body,
+        user_id: 'invalid_id',
+      },
     });
 
     expect(result.statusCode).toBe(400);
@@ -51,8 +53,10 @@ describe('CreateTransactionController', () => {
     const { sut } = makeSut();
 
     const result = await sut.execute({
-      ...httpRequest.body,
-      user_id: 'invalid_id',
+      body: {
+        ...httpRequest.body,
+        user_id: 'invalid_id',
+      },
     });
 
     expect(result.statusCode).toBe(400);
@@ -62,8 +66,10 @@ describe('CreateTransactionController', () => {
     const { sut } = makeSut();
 
     const result = await sut.execute({
-      ...httpRequest.body,
-      name: undefined,
+      body: {
+        ...httpRequest.body,
+        name: undefined,
+      },
     });
 
     expect(result.statusCode).toBe(400);
