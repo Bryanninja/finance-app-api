@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { CreateTransactionController } from './create-transaction';
 
@@ -177,5 +178,16 @@ describe('CreateTransactionController', () => {
     });
 
     expect(result.statusCode).toBe(400);
+  });
+
+  it('should return 500 when CreateTransactionUseCase throws an error', async () => {
+    const { sut, createTransactionUseCase } = makeSut();
+    jest
+      .spyOn(createTransactionUseCase, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(500);
   });
 });
