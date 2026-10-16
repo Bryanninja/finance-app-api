@@ -7,13 +7,11 @@ describe('DeleteTransaction', () => {
   class DeleteTransactionUseCaseStub {
     execute() {
       return {
-        id: faker.string.uuid(),
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password({
-          length: 7,
-        }),
+        name: faker.string.alphanumeric(10),
+        user_id: faker.string.uuid(),
+        date: faker.date.anytime(),
+        amount: Number(faker.finance.amount()),
+        type: 'INVESTMENT',
       };
     }
   }
