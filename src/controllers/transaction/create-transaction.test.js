@@ -24,14 +24,27 @@ describe('CreateTransactionController', () => {
       name: faker.string.alphanumeric(10),
       date: faker.date.anytime().toISOString(),
       amount: Number(faker.finance.amount()),
-      type: 'INVESTMENT',
+      type: 'EXPENSE',
     },
   };
 
-  it('should return 201 when create a transaction', async () => {
+  it('should return 201 when create a transaction (expense)', async () => {
     const { sut } = makeSut();
 
     const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(201);
+  });
+
+  it('should return 201 when create a transaction (earning)', async () => {
+    const { sut } = makeSut();
+
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        type: 'EARNING',
+      },
+    });
 
     expect(result.statusCode).toBe(201);
   });
