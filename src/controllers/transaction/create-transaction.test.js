@@ -154,7 +154,7 @@ describe('CreateTransactionController', () => {
     expect(result.statusCode).toBe(400);
   });
 
-  it('should return 400 when date is invalid', async () => {
+  it('should return 400 when type is invalid', async () => {
     const { sut } = makeSut();
 
     const result = await sut.execute({
