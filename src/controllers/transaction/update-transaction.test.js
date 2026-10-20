@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { UpdateTransactionController } from './update-transaction';
 
@@ -91,5 +92,16 @@ describe('UpdateTransactionController', () => {
     });
 
     expect(result.statusCode).toBe(400);
+  });
+
+  it('should return 500 when UpdateTransactionUseCase throws an error', async () => {
+    const { sut, updateTransactionUseCase } = makeSut();
+    jest
+      .spyOn(updateTransactionUseCase, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(500);
   });
 });
