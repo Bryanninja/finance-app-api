@@ -69,4 +69,15 @@ describe('GetTransactionsByUserIdController', () => {
 
     expect(result.statusCode).toBe(404);
   });
+
+  it('should return 500 when GetTransactionsByUserIdUseCase throws an Error', async () => {
+    const { sut, getTransactionsByUserIdUseCase } = makeSut();
+    jest
+      .spyOn(getTransactionsByUserIdUseCase, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(500);
+  });
 });
