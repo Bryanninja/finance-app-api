@@ -30,9 +30,8 @@ export class GetTransactionsByUserIdController {
       }
 
       //chamar use case
-      const transactions = await this.getTransactionsByUserIdUseCase.execute({
-        userId,
-      });
+      const transactions =
+        await this.getTransactionsByUserIdUseCase.execute(userId);
 
       //retornar resposta http
       return ok(transactions);
