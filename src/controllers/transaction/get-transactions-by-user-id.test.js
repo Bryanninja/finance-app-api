@@ -80,4 +80,13 @@ describe('GetTransactionsByUserIdController', () => {
 
     expect(result.statusCode).toBe(500);
   });
+
+  it('should call GetTransactionsByUserIdUseCase with correct params', async () => {
+    const { sut, getTransactionsByUserIdUseCase } = makeSut();
+    const executeSpy = jest.spyOn(getTransactionsByUserIdUseCase, 'execute');
+
+    await sut.execute(httpRequest);
+
+    expect(executeSpy).toHaveBeenCalledWith(httpRequest.query.userId);
+  });
 });
