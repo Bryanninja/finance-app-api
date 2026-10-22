@@ -8,7 +8,7 @@ describe('UpdateTransactionController', () => {
       return {
         name: faker.string.alphanumeric(10),
         user_id: faker.string.uuid(),
-        date: faker.date.anytime(),
+        date: faker.date.anytime().toISOString(),
         amount: Number(faker.finance.amount()),
         type: 'INVESTMENT',
       };
@@ -28,7 +28,7 @@ describe('UpdateTransactionController', () => {
     },
     body: {
       name: faker.string.alphanumeric(10),
-      date: faker.date.anytime(),
+      date: faker.date.anytime().toISOString(),
       amount: Number(faker.finance.amount()),
       type: 'INVESTMENT',
     },
