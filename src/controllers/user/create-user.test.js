@@ -168,14 +168,12 @@ describe('create User Controller', () => {
     const { sut, createUserUseCase } = makeSut();
     jest
       .spyOn(createUserUseCase, 'execute')
-      .mockImplementationOnce(
-        new EmailAlredyInUseError(httpRequest.body.email),
-      );
+      .mockRejectedValueOnce(new EmailAlredyInUseError(httpRequest.body.email));
 
     //act
     const result = await sut.execute(httpRequest);
 
     //assert
-    expect(result.statusCode).toBe(500);
+    expect(result.statusCode).toBe(400);
   });
 });
