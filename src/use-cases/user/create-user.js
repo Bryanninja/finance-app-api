@@ -1,12 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcrypt';
 
 import { EmailAlredyInUseError } from '../../errors/users.js';
 
 export class CreateUserUseCase {
-  constructor(createUserRepository, getUserByEmailRepository) {
+  constructor(
+    createUserRepository,
+    getUserByEmailRepository,
+    passwordHasherAdapter,
+  ) {
     this.createUserRepository = createUserRepository;
     this.getUserByEmailRepository = getUserByEmailRepository;
+    this.passwordHasherAdapter = passwordHasherAdapter;
   }
 
   async execute(createUserParams) {
@@ -24,7 +28,9 @@ export class CreateUserUseCase {
     const userId = uuidv4();
 
     // criptografar a senha
-    const hashedPassword = await bcrypt.hash(createUserParams.password, 10);
+    const hashedPassword = await this.passwordHasherAdapter.execute(
+      createUserParams.password,
+    );
 
     //inserir o usúario no banco de dados
     const user = {
