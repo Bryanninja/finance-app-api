@@ -75,6 +75,17 @@ describe('DeleteUserController', () => {
     expect(result.statusCode).toBe(404);
   });
 
+  it('should return 404 if deleteUserUseCase returns null', async () => {
+    const { sut, deleteUserUseCase } = makeSut();
+
+    // Simula o UseCase retornando null (sem dar throw)
+    jest.spyOn(deleteUserUseCase, 'execute').mockResolvedValueOnce(null);
+
+    const result = await sut.execute(httpRequest);
+
+    expect(result.statusCode).toBe(404);
+  });
+
   it('should call DeleteUserUseCase with correct params', async () => {
     const { sut, deleteUserUseCase } = makeSut();
     const executeSpy = jest.spyOn(deleteUserUseCase, 'execute');
