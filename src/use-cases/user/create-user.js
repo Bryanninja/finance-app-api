@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { EmailAlredyInUseError } from '../../errors/users.js';
 
 export class CreateUserUseCase {
@@ -7,10 +5,12 @@ export class CreateUserUseCase {
     createUserRepository,
     getUserByEmailRepository,
     passwordHasherAdapter,
+    idGeneratorAdapter,
   ) {
     this.createUserRepository = createUserRepository;
     this.getUserByEmailRepository = getUserByEmailRepository;
     this.passwordHasherAdapter = passwordHasherAdapter;
+    this.idGeneratorAdapter = idGeneratorAdapter;
   }
 
   async execute(createUserParams) {
@@ -25,7 +25,7 @@ export class CreateUserUseCase {
     }
 
     //gerar ID do usuario
-    const userId = uuidv4();
+    const userId = this.idGeneratorAdapter.execute();
 
     // criptografar a senha
     const hashedPassword = await this.passwordHasherAdapter.execute(
