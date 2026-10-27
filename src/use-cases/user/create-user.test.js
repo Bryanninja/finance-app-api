@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+import { EmailAlredyInUseError } from '../../errors/users';
 import { CreateUserUseCase } from './create-user.js';
 import { faker } from '@faker-js/faker';
 
@@ -48,7 +50,7 @@ describe('CreateUserUseCase', () => {
     };
   };
 
-  const createUserParams = {
+  const userParams = {
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     email: faker.internet.email(),
@@ -58,8 +60,21 @@ describe('CreateUserUseCase', () => {
   it('should successfully create a user', async () => {
     const { sut } = makeSut();
 
-    const createdUser = await sut.execute(createUserParams);
+    const createdUser = await sut.execute(userParams);
 
     expect(createdUser).toBeTruthy();
+  });
+
+  it('should throw EmailAlredyInUseError if GetUserByEmailRepository returns a user', async () => {
+    const { sut, getUserByEmailRepository } = makeSut();
+    jest
+      .spyOn(getUserByEmailRepository, 'execute')
+      .mockResolvedValueOnce(userParams);
+
+    const promise = sut.execute(userParams);
+
+    await expect(promise).rejects.toThrow(
+      new EmailAlredyInUseError(userParams.email),
+    );
   });
 });
