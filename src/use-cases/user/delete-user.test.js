@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { DeleteUserUseCase } from './delete-user.js';
 
@@ -34,5 +35,15 @@ describe('DeleteUserUseCase', () => {
     const deletedUser = await sut.execute(faker.string.uuid());
 
     expect(deletedUser).toEqual(user);
+  });
+
+  it('should call DeleteUserRepository with correct user id', async () => {
+    const { sut, deleteUserRepository } = makeSut();
+    const executeSpy = jest.spyOn(deleteUserRepository, 'execute');
+    const userId = faker.string.uuid();
+
+    await sut.execute(userId);
+
+    expect(executeSpy).toHaveBeenCalledWith(userId);
   });
 });
