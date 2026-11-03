@@ -103,6 +103,7 @@ describe('UpdateUserUseCase', () => {
       new EmailAlredyInUseError(user.email),
     );
   });
+
   it('should call UpdateUserRepository with correct params', async () => {
     const { sut, updateUserRepository } = makeSut();
     const updateUserRepositorySpy = jest.spyOn(updateUserRepository, 'execute');
@@ -122,5 +123,18 @@ describe('UpdateUserUseCase', () => {
       email: user.email,
       password: 'password_hasher',
     });
+  });
+
+  it('should throw if UpdateUserRepository throws', async () => {
+    const { sut, updateUserRepository } = makeSut();
+    jest
+      .spyOn(updateUserRepository, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const promise = sut.execute(user.id, {
+      email: user.email,
+    });
+
+    await expect(promise).rejects.toThrow();
   });
 });
