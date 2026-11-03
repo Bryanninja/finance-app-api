@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { UpdateUserUseCase } from './update-user';
 
@@ -56,6 +57,21 @@ describe('UpdateUserUseCase', () => {
       last_name: faker.person.lastName(),
     });
 
+    expect(updatedUser).toBe(user);
+  });
+
+  it('should return a user updated successfully (with email)', async () => {
+    const { sut, getUserByEmailRepository } = makeSut();
+    const getUserByEmailRepositorySpy = jest.spyOn(
+      getUserByEmailRepository,
+      'execute',
+    );
+
+    const email = faker.internet.email();
+
+    const updatedUser = await sut.execute(faker.string.uuid(), { email });
+
+    expect(getUserByEmailRepositorySpy).toHaveBeenCalledWith(email);
     expect(updatedUser).toBe(user);
   });
 });
