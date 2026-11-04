@@ -77,4 +77,13 @@ describe('CreateTransactionUseCase', () => {
       createTransactionParams.user_id,
     );
   });
+
+  it('should call IdGeneratorAdapter to generate a transaction id', async () => {
+    const { sut, idGeneratorAdapter } = makeSut();
+    const idGeneratorSpy = jest.spyOn(idGeneratorAdapter, 'execute');
+
+    await sut.execute(createTransactionParams);
+
+    expect(idGeneratorSpy).toHaveBeenCalled();
+  });
 });
