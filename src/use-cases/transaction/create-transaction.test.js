@@ -124,4 +124,15 @@ describe('CreateTransactionUseCase', () => {
 
     await expect(promise).rejects.toThrow(new Error());
   });
+
+  it('should throw an error when GetUserByIdRepository throws an error', async () => {
+    const { sut, getUserByIdRepository } = makeSut();
+    jest
+      .spyOn(getUserByIdRepository, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const promise = sut.execute(createTransactionParams);
+
+    await expect(promise).rejects.toThrow(new Error());
+  });
 });
