@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { CreateTransactionUseCase } from './create-transaction';
 
@@ -64,5 +65,16 @@ describe('CreateTransactionUseCase', () => {
       ...createTransactionParams,
       id: 'random-generated-id',
     });
+  });
+
+  it('should call GetUserByIdRepository with correct user_id', async () => {
+    const { sut, getUserByIdRepository } = makeSut();
+    const getUserByIdSpy = jest.spyOn(getUserByIdRepository, 'execute');
+
+    await sut.execute(createTransactionParams);
+
+    expect(getUserByIdSpy).toHaveBeenCalledWith(
+      createTransactionParams.user_id,
+    );
   });
 });
