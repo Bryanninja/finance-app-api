@@ -1,0 +1,68 @@
+import { faker } from '@faker-js/faker';
+import { CreateTransactionUseCase } from './create-transaction';
+
+describe('CreateTransactionUseCase', () => {
+  const user = {
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    email: faker.internet.email(),
+    password: faker.internet.password({
+      length: 7,
+    }),
+  };
+
+  const createTransactionParams = {
+    user_id: faker.string.uuid(),
+    name: faker.string.alphanumeric(10),
+    date: faker.date.anytime().toISOString(),
+    amount: Number(faker.finance.amount()),
+    type: 'EXPENSE',
+  };
+
+  class CreateTransactionRepositoryStub {
+    async execute(transaction) {
+      return transaction;
+    }
+  }
+
+  class GetUserByIdRepositoryStub {
+    async execute(userId) {
+      return { ...user, id: userId };
+    }
+  }
+
+  class IdGeneratorAdapterStub {
+    execute() {
+      return 'random-generated-id';
+    }
+  }
+
+  const makeSut = () => {
+    const createTransactionRepository = new CreateTransactionRepositoryStub();
+    const getUserByIdRepository = new GetUserByIdRepositoryStub();
+    const idGeneratorAdapter = new IdGeneratorAdapterStub();
+    const sut = new CreateTransactionUseCase(
+      createTransactionRepository,
+      getUserByIdRepository,
+      idGeneratorAdapter,
+    );
+
+    return {
+      createTransactionRepository,
+      getUserByIdRepository,
+      idGeneratorAdapter,
+      sut,
+    };
+  };
+
+  it('should create transaction successfully', async () => {
+    const { sut } = makeSut();
+
+    const result = await sut.execute(createTransactionParams);
+
+    expect(result).toEqual({
+      ...createTransactionParams,
+      id: 'random-generated-id',
+    });
+  });
+});
