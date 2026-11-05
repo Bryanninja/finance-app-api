@@ -100,4 +100,18 @@ describe('DeleteTransactionUseCase', () => {
       new Error('DeleteTransactionRepository error'),
     );
   });
+
+  it('should throw an error when GetTransactionByIdRepository throws an error', async () => {
+    const { sut, getTransactionByIdRepository } = makeSut();
+    jest
+      .spyOn(getTransactionByIdRepository, 'execute')
+      .mockRejectedValueOnce(new Error('GetTransactionByIdRepository error'));
+    const transactionId = faker.string.uuid();
+
+    const promise = sut.execute(transactionId);
+
+    await expect(promise).rejects.toThrow(
+      new Error('GetTransactionByIdRepository error'),
+    );
+  });
 });
