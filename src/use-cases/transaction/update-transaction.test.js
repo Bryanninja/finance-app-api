@@ -51,4 +51,18 @@ describe('UpdateTransactionUseCase', () => {
       amout: updateTransactionParams.amount,
     });
   });
+
+  it('should throw an error if UpdateTransactionRepository throws', async () => {
+    const { sut, updateTransactionRepository } = makeSut();
+    jest
+      .spyOn(updateTransactionRepository, 'execute')
+      .mockRejectedValueOnce(new Error('Repository error'));
+
+    const transactionId = faker.string.uuid();
+
+    const promise = sut.execute(transactionId, {
+      amout: updateTransactionParams.amount,
+    });
+    await expect(promise).rejects.toThrow(new Error('Repository error'));
+  });
 });
