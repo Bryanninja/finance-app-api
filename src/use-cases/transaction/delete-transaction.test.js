@@ -60,4 +60,17 @@ describe('DeleteTransactionUseCase', () => {
       new TransactionNotFoundError(transactionId),
     );
   });
+
+  it('should call GetTransactionByIdRepository with correct transactionId', async () => {
+    const { sut, getTransactionByIdRepository } = makeSut();
+    const getTransactionByIdSpy = jest.spyOn(
+      getTransactionByIdRepository,
+      'execute',
+    );
+    const transactionId = faker.string.uuid();
+
+    await sut.execute(transactionId);
+
+    expect(getTransactionByIdSpy).toHaveBeenCalledWith(transactionId);
+  });
 });
