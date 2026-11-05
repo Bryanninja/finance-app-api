@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { GetTransactionsByUserIdUseCase } from './get-transactions-by-user-id';
 
@@ -59,5 +60,15 @@ describe('GetTransactionsByUserIdUseCase', () => {
       ...getTransactionParams,
       user_id: userId,
     });
+  });
+
+  it('should call GetTransactionsByUserIdRepository with correct user id', async () => {
+    const { sut, getTransactionsByUserIdRepository } = makeSut();
+    const executeSpy = jest.spyOn(getTransactionsByUserIdRepository, 'execute');
+    const userId = faker.string.uuid();
+
+    await sut.execute(userId);
+
+    expect(executeSpy).toHaveBeenCalledWith(userId);
   });
 });
