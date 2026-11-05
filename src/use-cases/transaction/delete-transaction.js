@@ -10,7 +10,7 @@ export class DeleteTransactionUseCase {
       await this.getTransactionByIdRepository.execute(transactionId);
 
     if (!transactionIdIsValid) {
-      throw new TransactionNotFoundError();
+      throw new TransactionNotFoundError(transactionId);
     }
 
     const deletedTransaction =
