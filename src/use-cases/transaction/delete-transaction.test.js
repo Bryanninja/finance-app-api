@@ -1,5 +1,7 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { DeleteTransactionUseCase } from './delete-transaction';
+import { TransactionNotFoundError } from '../../errors/transactions';
 
 describe('DeleteTransactionUseCase', () => {
   const deleteTransactionParams = {
@@ -44,5 +46,18 @@ describe('DeleteTransactionUseCase', () => {
     const result = await sut.execute(transactionId);
 
     expect(result).toEqual(deleteTransactionParams);
+  });
+
+  it('should throw an error if the transaction does not exist', async () => {
+    const { sut, getTransactionByIdRepository } = makeSut();
+    jest
+      .spyOn(getTransactionByIdRepository, 'execute')
+      .mockResolvedValueOnce(null);
+    const transactionId = faker.string.uuid();
+
+    const promise = sut.execute(transactionId);
+    await expect(promise).rejects.toThrow(
+      new TransactionNotFoundError(transactionId),
+    );
   });
 });
