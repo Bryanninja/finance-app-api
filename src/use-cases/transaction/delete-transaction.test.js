@@ -5,6 +5,7 @@ import { TransactionNotFoundError } from '../../errors/transactions';
 
 describe('DeleteTransactionUseCase', () => {
   const deleteTransactionParams = {
+    id: faker.string.uuid(),
     user_id: faker.string.uuid(),
     name: faker.string.alphanumeric(10),
     date: faker.date.anytime().toISOString(),
@@ -13,8 +14,8 @@ describe('DeleteTransactionUseCase', () => {
   };
 
   class DeleteTransactionRepositoryStub {
-    async execute() {
-      return deleteTransactionParams;
+    async execute(transactionId) {
+      return { ...deleteTransactionParams, id: transactionId };
     }
   }
 
@@ -45,7 +46,7 @@ describe('DeleteTransactionUseCase', () => {
 
     const result = await sut.execute(transactionId);
 
-    expect(result).toEqual(deleteTransactionParams);
+    expect(result).toEqual({ ...deleteTransactionParams, id: transactionId });
   });
 
   it('should throw an error if the transaction does not exist', async () => {
@@ -114,4 +115,6 @@ describe('DeleteTransactionUseCase', () => {
       new Error('GetTransactionByIdRepository error'),
     );
   });
+
+  it;
 });
