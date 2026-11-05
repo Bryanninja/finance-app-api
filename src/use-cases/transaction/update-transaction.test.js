@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { UpdateTransactionUseCase } from './update-transaction';
 
@@ -34,5 +35,20 @@ describe('UpdateTransactionUseCase', () => {
     const result = await sut.execute(transactionId);
 
     expect(result).toEqual({ ...updateTransactionParams, id: transactionId });
+  });
+
+  it('should call UpdateTransactionRepository with correct params', async () => {
+    const { sut, updateTransactionRepository } = makeSut();
+    const updateTransactionRepositorySpy = jest.spyOn(
+      updateTransactionRepository,
+      'execute',
+    );
+
+    const transactionId = faker.string.uuid();
+    await sut.execute(transactionId, { amout: updateTransactionParams.amount });
+
+    expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(transactionId, {
+      amout: updateTransactionParams.amount,
+    });
   });
 });
