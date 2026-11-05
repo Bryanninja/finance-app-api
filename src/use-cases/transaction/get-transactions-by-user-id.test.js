@@ -25,7 +25,7 @@ describe('GetTransactionsByUserIdUseCase', () => {
 
   class GetTransactionsByUserIdRepositoryStub {
     async execute(userId) {
-      return { ...getTransactionParams, user_id: userId };
+      return [{ ...getTransactionParams, user_id: userId }];
     }
   }
 
@@ -57,10 +57,12 @@ describe('GetTransactionsByUserIdUseCase', () => {
 
     const transactions = await sut.execute(userId);
 
-    expect(transactions).toEqual({
-      ...getTransactionParams,
-      user_id: userId,
-    });
+    expect(transactions).toEqual([
+      {
+        ...getTransactionParams,
+        user_id: userId,
+      },
+    ]);
   });
 
   it('should call GetTransactionsByUserIdRepository with correct user id', async () => {
@@ -89,7 +91,7 @@ describe('GetTransactionsByUserIdUseCase', () => {
     const userId = faker.string.uuid();
 
     const promise = sut.execute(userId);
-    expect(promise).rejects.toThrow(new UserNotFoundError(userId));
+    await expect(promise).rejects.toThrow(new UserNotFoundError(userId));
   });
 
   it('should throw if GetTransactionsByUserIdRepository throws', async () => {
