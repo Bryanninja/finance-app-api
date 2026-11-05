@@ -86,4 +86,18 @@ describe('DeleteTransactionUseCase', () => {
 
     expect(deleteTransactionSpy).toHaveBeenCalledWith(transactionId);
   });
+
+  it('should throw an error when DeleteTransactionRepository throws an error', async () => {
+    const { sut, deleteTransactionRepository } = makeSut();
+    jest
+      .spyOn(deleteTransactionRepository, 'execute')
+      .mockRejectedValueOnce(new Error('DeleteTransactionRepository error'));
+    const transactionId = faker.string.uuid();
+
+    const promise = sut.execute(transactionId);
+
+    await expect(promise).rejects.toThrow(
+      new Error('DeleteTransactionRepository error'),
+    );
+  });
 });
