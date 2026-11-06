@@ -1,18 +1,9 @@
 import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { GetUserByIdUseCase } from './get-user-by-id';
+import { user } from '../../tests';
 
 describe('GetUserByIdUseCase', () => {
-  const user = {
-    id: faker.string.uuid(),
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: faker.internet.password({
-      length: 7,
-    }),
-  };
-
   const userId = faker.string.uuid();
 
   class GetUserByIdRepositoryStub {

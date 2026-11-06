@@ -1,9 +1,14 @@
 import { jest } from '@jest/globals';
 import { EmailAlredyInUseError } from '../../errors/users';
 import { CreateUserUseCase } from './create-user.js';
-import { faker } from '@faker-js/faker';
+import { user as fixtureUser } from '../../tests';
 
 describe('CreateUserUseCase', () => {
+  const user = {
+    ...fixtureUser,
+    id: undefined,
+  };
+
   class GetUserByEmailRepositoryStub {
     async execute() {
       return null;
@@ -50,31 +55,22 @@ describe('CreateUserUseCase', () => {
     };
   };
 
-  const userParams = {
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: faker.internet.password({ length: 7 }),
-  };
-
   it('should successfully create a user', async () => {
     const { sut } = makeSut();
 
-    const createdUser = await sut.execute(userParams);
+    const createdUser = await sut.execute(user);
 
     expect(createdUser).toBeTruthy();
   });
 
   it('should throw EmailAlredyInUseError if GetUserByEmailRepository returns a user', async () => {
     const { sut, getUserByEmailRepository } = makeSut();
-    jest
-      .spyOn(getUserByEmailRepository, 'execute')
-      .mockResolvedValueOnce(userParams);
+    jest.spyOn(getUserByEmailRepository, 'execute').mockResolvedValueOnce(user);
 
-    const promise = sut.execute(userParams);
+    const promise = sut.execute(user);
 
     await expect(promise).rejects.toThrow(
-      new EmailAlredyInUseError(userParams.email),
+      new EmailAlredyInUseError(user.email),
     );
   });
 
@@ -83,11 +79,11 @@ describe('CreateUserUseCase', () => {
     const idGeneratorSpy = jest.spyOn(idGeneratorAdapter, 'execute');
     const createUserRepositorySpy = jest.spyOn(createUserRepository, 'execute');
 
-    await sut.execute(userParams);
+    await sut.execute(user);
 
     expect(idGeneratorSpy).toHaveBeenCalled();
     expect(createUserRepositorySpy).toHaveBeenCalledWith({
-      ...userParams,
+      ...user,
       password: 'hashed_password',
       id: 'generated_id',
     });
@@ -98,11 +94,11 @@ describe('CreateUserUseCase', () => {
     const passwordHasherSpy = jest.spyOn(passwordHasherAdapter, 'execute');
     const createUserRepositorySpy = jest.spyOn(createUserRepository, 'execute');
 
-    await sut.execute(userParams);
+    await sut.execute(user);
 
-    expect(passwordHasherSpy).toHaveBeenCalledWith(userParams.password);
+    expect(passwordHasherSpy).toHaveBeenCalledWith(user.password);
     expect(createUserRepositorySpy).toHaveBeenCalledWith({
-      ...userParams,
+      ...user,
       password: 'hashed_password',
       id: 'generated_id',
     });
@@ -114,7 +110,7 @@ describe('CreateUserUseCase', () => {
       .spyOn(getUserByEmailRepository, 'execute')
       .mockRejectedValueOnce(new Error());
 
-    const promise = sut.execute(userParams);
+    const promise = sut.execute(user);
 
     await expect(promise).rejects.toThrow();
   });
@@ -125,7 +121,7 @@ describe('CreateUserUseCase', () => {
       throw new Error();
     });
 
-    const promise = sut.execute(userParams);
+    const promise = sut.execute(user);
 
     await expect(promise).rejects.toThrow();
   });
@@ -136,7 +132,7 @@ describe('CreateUserUseCase', () => {
       .spyOn(passwordHasherAdapter, 'execute')
       .mockRejectedValueOnce(new Error());
 
-    const promise = sut.execute(userParams);
+    const promise = sut.execute(user);
 
     await expect(promise).rejects.toThrow();
   });
@@ -147,7 +143,7 @@ describe('CreateUserUseCase', () => {
       .spyOn(createUserRepository, 'execute')
       .mockRejectedValueOnce(new Error());
 
-    const promise = sut.execute(userParams);
+    const promise = sut.execute(user);
 
     await expect(promise).rejects.toThrow();
   });
