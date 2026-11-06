@@ -2,10 +2,11 @@ import { jest } from '@jest/globals';
 import { CreateUserController } from './create-user';
 import { faker } from '@faker-js/faker';
 import { EmailAlredyInUseError } from '../../errors/users';
+import { user, userWithoutId } from '../../tests';
 
-describe('create User Controller', () => {
+describe('CreateUserController', () => {
   class CreateUserUseCaseStub {
-    async execute(user) {
+    async execute() {
       return user;
     }
   }
@@ -21,14 +22,7 @@ describe('create User Controller', () => {
   };
 
   const httpRequest = {
-    body: {
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: faker.internet.password({
-        length: 7,
-      }),
-    },
+    body: userWithoutId,
   };
 
   it('should return 201 when creating an user successfully', async () => {
@@ -40,7 +34,7 @@ describe('create User Controller', () => {
 
     //assert
     expect(result.statusCode).toBe(201);
-    expect(result.body).toEqual(httpRequest.body);
+    expect(result.body).toEqual(user);
   });
 
   it('should return 400 if first_name is not provided', async () => {
