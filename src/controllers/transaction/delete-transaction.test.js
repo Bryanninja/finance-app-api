@@ -2,17 +2,12 @@ import { jest } from '@jest/globals';
 import { TransactionNotFoundError } from '../../errors/transactions';
 import { DeleteTransactionController } from './delete-transaction';
 import { faker } from '@faker-js/faker';
+import { transaction } from '../../tests';
 
 describe('DeleteTransaction', () => {
   class DeleteTransactionUseCaseStub {
     execute() {
-      return {
-        name: faker.string.alphanumeric(10),
-        user_id: faker.string.uuid(),
-        date: faker.date.anytime(),
-        amount: Number(faker.finance.amount()),
-        type: 'INVESTMENT',
-      };
+      return transaction;
     }
   }
 

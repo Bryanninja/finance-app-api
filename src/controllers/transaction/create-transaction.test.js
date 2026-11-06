@@ -1,10 +1,14 @@
 import { jest } from '@jest/globals';
-import { faker } from '@faker-js/faker';
 import { CreateTransactionController } from './create-transaction';
+import { transactionWithoutId, transaction } from '../../tests';
 
 describe('CreateTransactionController', () => {
+  const httpRequest = {
+    body: transactionWithoutId,
+  };
+
   class CreateTransactionUseCaseStub {
-    execute(transaction) {
+    execute() {
       return transaction;
     }
   }
@@ -17,16 +21,6 @@ describe('CreateTransactionController', () => {
       createTransactionUseCase,
       sut,
     };
-  };
-
-  const httpRequest = {
-    body: {
-      user_id: faker.string.uuid(),
-      name: faker.string.alphanumeric(10),
-      date: faker.date.anytime().toISOString(),
-      amount: Number(faker.finance.amount()),
-      type: 'EXPENSE',
-    },
   };
 
   it('should return 201 when create a transaction (expense)', async () => {

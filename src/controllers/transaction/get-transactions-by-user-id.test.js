@@ -2,17 +2,12 @@ import { jest } from '@jest/globals';
 import { GetTransactionsByUserIdController } from './get-transactions-by-user-id';
 import { faker } from '@faker-js/faker';
 import { UserNotFoundError } from '../../errors/users';
+import { transaction } from '../../tests';
 
 describe('GetTransactionsByUserIdController', () => {
   class GetTransactionsByUserIdUseCaseStub {
     execute() {
-      return {
-        name: faker.string.alphanumeric(10),
-        user_id: faker.string.uuid(),
-        date: faker.date.anytime(),
-        amount: Number(faker.finance.amount()),
-        type: 'INVESTMENT',
-      };
+      return [transaction];
     }
   }
 
