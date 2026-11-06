@@ -2,36 +2,18 @@ import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { GetTransactionsByUserIdUseCase } from './get-transactions-by-user-id';
 import { UserNotFoundError } from '../../errors/users';
+import { transaction, user } from '../../tests';
 
 describe('GetTransactionsByUserIdUseCase', () => {
-  const getTransactionParams = {
-    id: faker.string.uuid(),
-    user_id: faker.string.uuid(),
-    name: faker.string.alphanumeric(10),
-    date: faker.date.anytime().toISOString(),
-    amount: Number(faker.finance.amount()),
-    type: 'EXPENSE',
-  };
-
-  const user = {
-    id: faker.string.uuid(),
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-    email: faker.internet.email(),
-    password: faker.internet.password({
-      length: 7,
-    }),
-  };
-
   class GetTransactionsByUserIdRepositoryStub {
     async execute(userId) {
-      return [{ ...getTransactionParams, user_id: userId }];
+      return [{ ...transaction, user_id: userId }];
     }
   }
 
   class GetUserByIdRepositoryStub {
-    async execute(userId) {
-      return { ...user, id: userId };
+    async execute() {
+      return user;
     }
   }
 
@@ -59,7 +41,7 @@ describe('GetTransactionsByUserIdUseCase', () => {
 
     expect(transactions).toEqual([
       {
-        ...getTransactionParams,
+        ...transaction,
         user_id: userId,
       },
     ]);

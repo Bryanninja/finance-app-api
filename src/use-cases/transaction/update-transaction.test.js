@@ -1,20 +1,12 @@
 import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { UpdateTransactionUseCase } from './update-transaction';
+import { transaction } from '../../tests';
 
 describe('UpdateTransactionUseCase', () => {
-  const updateTransactionParams = {
-    id: faker.string.uuid(),
-    user_id: faker.string.uuid(),
-    name: faker.string.alphanumeric(10),
-    date: faker.date.anytime().toISOString(),
-    amount: Number(faker.finance.amount()),
-    type: 'EXPENSE',
-  };
-
   class UpdateTransactionRepositoryStub {
-    async execute(transactionId) {
-      return { ...updateTransactionParams, id: transactionId };
+    async execute() {
+      return transaction;
     }
   }
 
@@ -34,7 +26,7 @@ describe('UpdateTransactionUseCase', () => {
 
     const result = await sut.execute(transactionId);
 
-    expect(result).toEqual({ ...updateTransactionParams, id: transactionId });
+    expect(result).toEqual(transaction);
   });
 
   it('should call UpdateTransactionRepository with correct params', async () => {
@@ -45,10 +37,10 @@ describe('UpdateTransactionUseCase', () => {
     );
 
     const transactionId = faker.string.uuid();
-    await sut.execute(transactionId, { amout: updateTransactionParams.amount });
+    await sut.execute(transactionId, { amout: transaction.amount });
 
     expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(transactionId, {
-      amout: updateTransactionParams.amount,
+      amout: transaction.amount,
     });
   });
 
@@ -61,7 +53,7 @@ describe('UpdateTransactionUseCase', () => {
     const transactionId = faker.string.uuid();
 
     const promise = sut.execute(transactionId, {
-      amout: updateTransactionParams.amount,
+      amout: transaction.amount,
     });
     await expect(promise).rejects.toThrow(new Error('Repository error'));
   });

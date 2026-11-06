@@ -2,26 +2,18 @@ import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { DeleteTransactionUseCase } from './delete-transaction';
 import { TransactionNotFoundError } from '../../errors/transactions';
+import { transaction } from '../../tests';
 
 describe('DeleteTransactionUseCase', () => {
-  const deleteTransactionParams = {
-    id: faker.string.uuid(),
-    user_id: faker.string.uuid(),
-    name: faker.string.alphanumeric(10),
-    date: faker.date.anytime().toISOString(),
-    amount: Number(faker.finance.amount()),
-    type: 'EXPENSE',
-  };
-
   class DeleteTransactionRepositoryStub {
-    async execute(transactionId) {
-      return { ...deleteTransactionParams, id: transactionId };
+    async execute() {
+      return transaction;
     }
   }
 
   class GetTransactionByIdRepositoryStub {
     async execute() {
-      return deleteTransactionParams;
+      return transaction;
     }
   }
 
@@ -46,7 +38,7 @@ describe('DeleteTransactionUseCase', () => {
 
     const result = await sut.execute(transactionId);
 
-    expect(result).toEqual({ ...deleteTransactionParams, id: transactionId });
+    expect(result).toEqual(transaction);
   });
 
   it('should throw an error if the transaction does not exist', async () => {
