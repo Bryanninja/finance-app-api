@@ -6,8 +6,8 @@ import { transaction, user } from '../../tests';
 
 describe('GetTransactionsByUserIdUseCase', () => {
   class GetTransactionsByUserIdRepositoryStub {
-    async execute(userId) {
-      return [{ ...transaction, user_id: userId }];
+    async execute() {
+      return [{ transaction }];
     }
   }
 
@@ -41,8 +41,7 @@ describe('GetTransactionsByUserIdUseCase', () => {
 
     expect(transactions).toEqual([
       {
-        ...transaction,
-        user_id: userId,
+        transaction,
       },
     ]);
   });

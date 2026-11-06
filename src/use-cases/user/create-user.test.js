@@ -1,13 +1,10 @@
 import { jest } from '@jest/globals';
 import { EmailAlredyInUseError } from '../../errors/users';
 import { CreateUserUseCase } from './create-user.js';
-import { user as fixtureUser } from '../../tests';
+import { userWithoutId } from '../../tests';
 
 describe('CreateUserUseCase', () => {
-  const user = {
-    ...fixtureUser,
-    id: undefined,
-  };
+  const user = userWithoutId;
 
   class GetUserByEmailRepositoryStub {
     async execute() {
@@ -16,7 +13,7 @@ describe('CreateUserUseCase', () => {
   }
 
   class CreateUserRepositoryStub {
-    async execute(user) {
+    async execute() {
       return user;
     }
   }
