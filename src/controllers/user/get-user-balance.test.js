@@ -2,18 +2,12 @@ import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { GetUserBalanceController } from './get-user-balance';
 import { UserNotFoundError } from '../../errors/users';
+import { userBalance } from '../../tests';
 
 describe('GetUserBalanceController', () => {
   class GetUserBalanceUseCaseStub {
     execute() {
-      return {
-        balance: {
-          earnings: 25000,
-          expenses: 2400,
-          investments: 5000,
-          balance: 17600,
-        },
-      };
+      return userBalance;
     }
   }
 

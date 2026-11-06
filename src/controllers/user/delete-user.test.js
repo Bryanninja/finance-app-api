@@ -2,19 +2,12 @@ import { jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { DeleteUserController } from './delete-user';
 import { UserNotFoundError } from '../../errors/users';
+import { user } from '../../tests';
 
 describe('DeleteUserController', () => {
   class DeleteUserUseCaseStub {
     execute() {
-      return {
-        id: faker.string.uuid(),
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password({
-          length: 7,
-        }),
-      };
+      return user;
     }
   }
 
