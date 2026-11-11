@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { prisma } from '../../../../prisma/prisma';
 import { user as fakeUser } from '../../../tests';
 import { PostgresGetUserByEmailRepository } from './get-user-by-email';
@@ -10,5 +11,18 @@ describe('GetUserByEmailRepository', () => {
     const result = await sut.execute(fakeUser.email);
 
     expect(result).toStrictEqual(user);
+  });
+
+  it('should call prisma with correct params', async () => {
+    const sut = new PostgresGetUserByEmailRepository();
+    const prismaSpy = jest.spyOn(prisma.user, 'findUnique');
+
+    await sut.execute(fakeUser.email);
+
+    expect(prismaSpy).toHaveBeenCalledWith({
+      where: {
+        email: fakeUser.email,
+      },
+    });
   });
 });
