@@ -92,4 +92,15 @@ describe('GetUserBalanceRepository', () => {
       },
     });
   });
+
+  it('should throw an error if prisma throws an error', async () => {
+    const sut = new PostgresGetUserBalanceRepository();
+    jest
+      .spyOn(prisma.transaction, 'aggregate')
+      .mockRejectedValueOnce(new Error());
+
+    const promise = sut.execute(fakeUser.id);
+
+    await expect(promise).rejects.toThrow();
+  });
 });
