@@ -1,17 +1,36 @@
+import { jest } from '@jest/globals';
 import { prisma } from '../../../../prisma/prisma';
 import { PostgresUpdateUserRepository } from './update-user';
-import { user as fakeUser } from '../../../tests';
+import { faker } from '@faker-js/faker';
 
 describe('UpdateUserRepository', () => {
+  const updateUserParams = {
+    id: faker.string.uuid(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+  };
+
   it('should update user on db', async () => {
-    const user = await prisma.user.create({ data: fakeUser });
+    const user = await prisma.user.create({ data: updateUserParams });
     const sut = new PostgresUpdateUserRepository();
 
-    const result = await sut.execute(user.id, { first_name: 'new name' });
+    const result = await sut.execute(user.id, updateUserParams);
 
-    expect(result).toStrictEqual({
-      ...user,
-      first_name: 'new name',
+    expect(result).toStrictEqual(updateUserParams);
+  });
+
+  it('should call prisma with correct params', async () => {
+    const user = await prisma.user.create({ data: updateUserParams });
+    const sut = new PostgresUpdateUserRepository();
+    const spy = jest.spyOn(prisma.user, 'update');
+
+    await sut.execute(user.id, updateUserParams);
+
+    expect(spy).toHaveBeenCalledWith({
+      where: { id: user.id },
+      data: updateUserParams,
     });
   });
 });
